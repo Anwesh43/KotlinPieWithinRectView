@@ -26,7 +26,7 @@ class PieWithinRectView(ctx : Context) : View(ctx) {
         fun update(stopcb : (Float) -> Unit) {
             scales[j] += 0.1f * dir
             if (Math.abs(scales[j] - prevScale) > 1) {
-                prevScale = scales[j] + dir
+                scales[j] = prevScale + dir
                 j += jDir
                 if (j == scales.size || j == -1) {
                     jDir *= -1
@@ -81,12 +81,14 @@ class PieWithinRectView(ctx : Context) : View(ctx) {
             paint.color = Color.parseColor("#4CAF50")
             for (i in 0..3) {
                 canvas.save()
-                canvas.rotate(45f + 90f * i)
+                canvas.rotate(90f * i)
                 paint.strokeWidth = Math.min(w, h)/ 60
                 canvas.save()
-                canvas.translate(0f, -size * state.scales[0])
+                val x_a = size * state.scales[0]
+                canvas.translate(-x_a, -x_a)
                 paint.style = Paint.Style.STROKE
-                canvas.drawRoundRect(RectF(-r*1.2f, -r * 1.2f, r * 1.2f, r * 1.2f), r / 8 , r / 8, paint)
+                val rect_size = r * 1.2f * state.scales[0]
+                canvas.drawRoundRect(RectF(-rect_size, -rect_size, rect_size, rect_size), r / 8 , r / 8, paint)
                 paint.style = Paint.Style.FILL
                 canvas.drawArc(RectF(-r, -r, r, r), 0f, 360f * state.scales[1], true, paint)
                 canvas.restore()
