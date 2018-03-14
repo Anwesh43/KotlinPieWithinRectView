@@ -67,4 +67,36 @@ class PieWithinRectView(ctx : Context) : View(ctx) {
             }
         }
     }
+    data class PieWithinRect(var i : Int) {
+        val state = State()
+        fun draw (canvas : Canvas, paint : Paint) {
+            val w = canvas.width.toFloat()
+            val h = canvas.height.toFloat()
+            val r = Math.min(w, h) / 10
+            val size = Math.min(w, h) / 3
+            canvas.save()
+            canvas.translate(w / 2, h / 2)
+            paint.color = Color.parseColor("#4CAF50")
+            for (i in 0..3) {
+                canvas.save()
+                canvas.rotate(45f + 90f * i)
+                paint.strokeWidth = Math.min(w, h)/ 60
+                canvas.save()
+                canvas.translate(0f, -size * state.scales[0])
+                paint.style = Paint.Style.STROKE
+                canvas.drawRoundRect(RectF(-r*1.2f, -r * 1.2f, r * 1.2f, r * 1.2f), r / 8 , r / 8, paint)
+                paint.style = Paint.Style.FILL
+                canvas.drawArc(RectF(-r, -r, r, r), 0f, 360f * state.scales[1], true, paint)
+                canvas.restore()
+                canvas.restore()
+            }
+            canvas.restore()
+        }
+        fun update(stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
+        }
+    }
 }
