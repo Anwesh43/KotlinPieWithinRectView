@@ -19,4 +19,27 @@ class PieWithinRectView(ctx : Context) : View(ctx) {
         }
         return true
     }
+    data class State(var prevScale : Float = 0f, var dir : Float = 0f, var j : Int = 0, var jDir : Int = 1) {
+        val scales : Array<Float> = arrayOf(0f, 0f)
+        fun update(stopcb : (Float) -> Unit) {
+            scales[j] += 0.1f * dir
+            if (Math.abs(scales[j] - prevScale) > 1) {
+                prevScale = scales[j] + dir
+                j += jDir
+                if (j == scales.size || j == -1) {
+                    jDir *= -1
+                    j += jDir
+                    dir = 0f
+                    prevScale = scales[j]
+                    stopcb(prevScale)
+                }
+            }
+        }
+        fun startUpdating(startcb : (Float) -> Unit) {
+            if (dir == 0f) {
+                dir = 1 - 2 * prevScale
+                startcb()
+            }
+        }
+    }
 }
