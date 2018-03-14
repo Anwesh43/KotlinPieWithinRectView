@@ -3,6 +3,7 @@ package ui.anwesome.com.piewithinrectview
 /**
  * Created by anweshmishra on 14/03/18.
  */
+import android.app.Activity
 import android.content.*
 import android.graphics.*
 import android.view.*
@@ -116,6 +117,13 @@ class PieWithinRectView(ctx : Context) : View(ctx) {
             pieWithinRect.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity : Activity) : PieWithinRectView {
+            val view = PieWithinRectView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
